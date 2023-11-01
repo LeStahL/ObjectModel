@@ -16,6 +16,12 @@ from objectmodel.node import Node
 from objectmodel.undovaluechange import UndoValueChange
 
 class ObjectModel(QAbstractItemModel):
+    HeaderNames = [
+        'Name',
+        'Value',
+        'Type',
+    ]
+
     def __init__(
         self: Self,
         undoStack: Optional[QUndoStack] = None,
@@ -117,8 +123,22 @@ class ObjectModel(QAbstractItemModel):
             self.match(self.createIndex(0, 0, self._rootNode), Qt.ItemDataRole.DisplayRole, path.split('.')[-1], -1, Qt.MatchFlag.MatchRecursive),
         ))[0]
 
-    def flags(self, index: QModelIndex) -> Qt.ItemFlag:
+    def flags(self: Self, index: QModelIndex) -> Qt.ItemFlag:
         _flags = super().flags(index)
         if index.column() == 1:
             _flags = _flags | Qt.ItemFlag.ItemIsEditable
         return _flags
+
+    def headerData(
+        self: Self,
+        section: int,
+        orientation: Qt.Orientation,
+        role: Qt.ItemDataRole = Qt.ItemDataRole.DisplayRole,
+    ) -> Any:
+        if role != Qt.ItemDataRole.DisplayRole:
+            return None
+
+        if orientation == Qt.Orientation.Horizontal:
+            return ObjectModel.HeaderNames[section]
+        
+        return None
