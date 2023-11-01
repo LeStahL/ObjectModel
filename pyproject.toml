@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "objectmodel"
+version = "0.1.0"
+description = "Qt6 QAbstractItemModel-based model for displaying and editing Python objects."
+authors = ["Alexander Kraus <nr4@z10.info>"]
+license = "GPLv3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+PyQt6 = "^6.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
