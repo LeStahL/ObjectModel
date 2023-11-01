@@ -1,6 +1,8 @@
 # ObjectModel
 Qt6 QAbstractItemModel-based model for displaying and editing Python objects.
 
+![Screenshot](https://github.com/LeStahL/ObjectModel/blob/main/screenshot.png?raw=true)
+
 # Usage example
 Find a detailed usage example in the `examples/` subfolder.
 
