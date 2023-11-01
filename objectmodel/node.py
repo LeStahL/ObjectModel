@@ -73,6 +73,10 @@ class Node:
     def value(self: Self) -> Any:
         return self._value
     
+    @value.setter
+    def value(self: Self, value: Any) -> None:
+        self._value = value
+
     @property
     def type(self: Self) -> Any:
         return self._type

@@ -1,4 +1,3 @@
-from objectmodel.node import Node
 from objectmodel.objectmodel import ObjectModel
 from typing import (
     Self,
@@ -17,6 +16,7 @@ from PyQt6.QtWidgets import (
     QApplication,
     QTreeView,
 )
+from PyQt6.QtGui import QAction
 
 class AnEnum(StrEnum):
     Option1 = 'foo'
@@ -64,6 +64,14 @@ if __name__ == '__main__':
         name='dataClass',
         object=DataClass(),
     )
+
+    undoAction = QAction("Undo", treeView)
+    undoAction.setShortcut("CTRL+z")
+    undoAction.triggered.connect(objectModel._undoStack.undo)
+    redoAction = QAction("Undo", treeView)
+    redoAction.setShortcut("CTRL+SHIFT+z")
+    redoAction.triggered.connect(objectModel._undoStack.redo)
+    treeView.addActions((undoAction, redoAction))
 
     treeView.show()
     exit(app.exec())

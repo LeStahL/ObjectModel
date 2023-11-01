@@ -9,16 +9,22 @@ from PyQt6.QtCore import (
     QAbstractItemModel,
     Qt,
 )
+from PyQt6.QtGui import (
+    QUndoStack,
+)
 from objectmodel.node import Node
+from objectmodel.undovaluechange import UndoValueChange
 
 class ObjectModel(QAbstractItemModel):
     def __init__(
         self: Self,
+        undoStack: Optional[QUndoStack] = None,
         parent: Optional[QObject] = None,
     ) -> None:
         super().__init__(parent)
 
         self._rootNode = Node(value='Empty')
+        self._undoStack = QUndoStack() if undoStack is None else undoStack
 
     def load(self: Self, name: str, object: Any) -> None:
         self.beginResetModel()
@@ -32,7 +38,7 @@ class ObjectModel(QAbstractItemModel):
         parent: QModelIndex = QModelIndex(),
     ) -> QModelIndex:
         if not self.hasIndex(row, column, parent):
-            return QModelIndex()        
+            return QModelIndex()
         return self.createIndex(row, column, self.parentNode(parent).children[row])
 
     def parent(self: Self, index: QModelIndex) -> QModelIndex:
@@ -78,3 +84,30 @@ class ObjectModel(QAbstractItemModel):
                 return node.type.__name__
 
         return None
+
+    def setData(
+        self: Self,
+        index: QModelIndex,
+        value: Any,
+        role: Qt.ItemDataRole = Qt.ItemDataRole.EditRole,
+    ) -> bool:
+        if not index.isValid():
+            return False
+
+        if role == Qt.ItemDataRole.EditRole:
+            self._undoStack.push(UndoValueChange(index, value))
+            return True
+
+        return False
+    
+    def indexWithPath(self: Self, path: str) -> QModelIndex:
+        return list(filter(
+            lambda index: index.internalPointer().path == path,
+            self.match(self.createIndex(0, 0, self._rootNode), Qt.ItemDataRole.DisplayRole, path.split('.')[-1], -1, Qt.MatchFlag.MatchRecursive),
+        ))[0]
+
+    def flags(self, index: QModelIndex) -> Qt.ItemFlag:
+        _flags = super().flags(index)
+        if index.column() == 1:
+            _flags = _flags | Qt.ItemFlag.ItemIsEditable
+        return _flags
