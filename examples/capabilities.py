@@ -1,4 +1,5 @@
 from objectmodel.objectmodel import ObjectModel
+from objectmodel.objectitemdelegate import ObjectItemDelegate
 from typing import (
     Self,
     List,
@@ -34,6 +35,7 @@ class OtherDataClass:
         variable: str,
     ) -> None:
         self.AVariable = variable
+        self.AnEnum = AnEnum.Option1
 
 class DataClass:
     ClassVariable: int = 0
@@ -64,6 +66,8 @@ if __name__ == '__main__':
         name='dataClass',
         object=DataClass(),
     )
+    objectItemDelegate = ObjectItemDelegate()
+    treeView.setItemDelegate(objectItemDelegate)
 
     undoAction = QAction("Undo", treeView)
     undoAction.setShortcut("CTRL+z")

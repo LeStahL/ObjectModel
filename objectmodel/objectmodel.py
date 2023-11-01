@@ -78,8 +78,15 @@ class ObjectModel(QAbstractItemModel):
         if role == Qt.ItemDataRole.DisplayRole:
             if index.column() == 0:
                 return node.name
+
             elif index.column() == 1:
-                return node.value
+                if node.isArray:
+                    return None
+                if node.isObject:
+                    return None
+
+                return str(node.value)
+
             elif index.column() == 2:
                 return node.type.__name__
 
