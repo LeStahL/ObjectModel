@@ -71,10 +71,10 @@ if __name__ == '__main__':
 
     undoAction = QAction("Undo", treeView)
     undoAction.setShortcut("CTRL+z")
-    undoAction.triggered.connect(objectModel._undoStack.undo)
+    undoAction.triggered.connect(objectModel.undoStack.undo)
     redoAction = QAction("Undo", treeView)
     redoAction.setShortcut("CTRL+SHIFT+z")
-    redoAction.triggered.connect(objectModel._undoStack.redo)
+    redoAction.triggered.connect(objectModel.undoStack.redo)
     treeView.addActions((undoAction, redoAction))
 
     treeView.show()

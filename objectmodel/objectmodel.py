@@ -26,6 +26,10 @@ class ObjectModel(QAbstractItemModel):
         self._rootNode = Node(value='Empty')
         self._undoStack = QUndoStack() if undoStack is None else undoStack
 
+    @property
+    def undoStack(self: Self) -> QUndoStack:
+        return self._undoStack
+
     def load(self: Self, name: str, object: Any) -> None:
         self.beginResetModel()
         self._rootNode = Node(value=object, name=name)
