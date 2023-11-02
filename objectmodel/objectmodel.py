@@ -39,6 +39,8 @@ class ObjectModel(QAbstractItemModel):
 
     def load(self: Self, name: str, object: Any) -> None:
         self.beginResetModel()
+        self._undoStack.clear()
+        self._undoStack.setClean()
         self._rootNode = Node(value=object, name=name)
         self.endResetModel()
 
