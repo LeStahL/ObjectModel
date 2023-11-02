@@ -37,6 +37,7 @@ class DataClass:
         self.InstanceVariable: int = 1
         self.StringVariable: str = "hello, world!"
         self.FloatVariable: float = 1.337
+        self.BoolVariable: bool = False
         self.ArrayVariable: List[OtherDataClass] = [
             OtherDataClass("foo"),
             OtherDataClass("bar"),
@@ -79,6 +80,7 @@ class NodeTest(TestCase):
         self.assertFalse(enumNode.isFloat)
         self.assertFalse(enumNode.isInt)
         self.assertFalse(enumNode.isString)
+        self.assertFalse(enumNode.isBool)
 
     def testFlagVariable(self: Self) -> None:
         flagNode: Node = self.node.fromPath('Root.FlagVariable')
@@ -89,6 +91,7 @@ class NodeTest(TestCase):
         self.assertFalse(flagNode.isFloat)
         self.assertFalse(flagNode.isInt)
         self.assertFalse(flagNode.isString)
+        self.assertFalse(flagNode.isBool)
 
     def testArrayVariable(self: Self) -> None:
         arrayNode: Node = self.node.fromPath('Root.ArrayVariable')
@@ -99,6 +102,7 @@ class NodeTest(TestCase):
         self.assertFalse(arrayNode.isFloat)
         self.assertFalse(arrayNode.isInt)
         self.assertFalse(arrayNode.isString)
+        self.assertFalse(arrayNode.isBool)
 
     def testObjectVariable(self: Self) -> None:
         objectNode: Node = self.node
@@ -109,6 +113,7 @@ class NodeTest(TestCase):
         self.assertFalse(objectNode.isFloat)
         self.assertFalse(objectNode.isInt)
         self.assertFalse(objectNode.isString)
+        self.assertFalse(objectNode.isBool)
 
     def testFloatVariable(self: Self) -> None:
         node: Node = self.node.fromPath('Root.FloatVariable')
@@ -119,6 +124,7 @@ class NodeTest(TestCase):
         self.assertTrue(node.isFloat)
         self.assertFalse(node.isInt)
         self.assertFalse(node.isString)
+        self.assertFalse(node.isBool)
 
     def testIntVariable(self: Self) -> None:
         node: Node = self.node.fromPath('Root.InstanceVariable')
@@ -129,6 +135,7 @@ class NodeTest(TestCase):
         self.assertFalse(node.isFloat)
         self.assertTrue(node.isInt)
         self.assertFalse(node.isString)
+        self.assertFalse(node.isBool)
 
     def testStringVariable(self: Self) -> None:
         node: Node = self.node.fromPath('Root.StringVariable')
@@ -139,6 +146,18 @@ class NodeTest(TestCase):
         self.assertFalse(node.isFloat)
         self.assertFalse(node.isInt)
         self.assertTrue(node.isString)
+        self.assertFalse(node.isBool)
+
+    def testBoolVariable(self: Self) -> None:
+        node: Node = self.node.fromPath('Root.BoolVariable')
+        self.assertFalse(node.isObject)
+        self.assertFalse(node.isEnum)
+        self.assertFalse(node.isFlag)
+        self.assertFalse(node.isArray)
+        self.assertFalse(node.isFloat)
+        self.assertFalse(node.isInt)
+        self.assertFalse(node.isString)
+        self.assertTrue(node.isBool)
 
 if __name__ == '__main__':
     main()

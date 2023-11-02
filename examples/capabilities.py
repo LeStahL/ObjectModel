@@ -44,6 +44,7 @@ class DataClass:
         self.InstanceVariable: int = 1
         self.StringVariable: str = "hello, world!"
         self.FloatVariable: float = 1.337
+        self.BoolVariable: bool = False
         self.ArrayVariable: List[OtherDataClass] = [
             OtherDataClass("foo"),
             OtherDataClass("bar"),

@@ -96,6 +96,10 @@ class Node:
     @property
     def isArray(self: Self) -> bool:
         return isinstance(self._value, list)
+    
+    @property
+    def isBool(self: Self) -> bool:
+        return isinstance(self._value, bool)
 
     @property
     def isObject(self: Self) -> bool:
@@ -105,7 +109,8 @@ class Node:
             self.isArray or \
             self.isFloat or \
             self.isInt or \
-            self.isString
+            self.isString or \
+            self.isBool
         )
 
     @property
