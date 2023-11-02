@@ -7,6 +7,7 @@ from typing import (
 from enum import (
     StrEnum,
     IntFlag,
+    IntEnum,
     auto,
 )
 from sys import (
@@ -23,6 +24,10 @@ class AnEnum(StrEnum):
     Option1 = 'foo'
     Option2 = 'bar'
 
+class AnIntEnum(IntEnum):
+    A = auto()
+    B = auto()
+
 class AFlag(IntFlag):
     Nothing = 0
     First = auto()
@@ -35,7 +40,6 @@ class OtherDataClass:
         variable: str,
     ) -> None:
         self.AVariable = variable
-        self.AnEnum = AnEnum.Option1
 
 class DataClass:
     ClassVariable: int = 0
@@ -52,6 +56,7 @@ class DataClass:
             OtherDataClass("bad"),
         ]
         self.EnumVariable: AnEnum = AnEnum.Option2
+        self.IntEnumVariable: AnIntEnum = AnIntEnum.B
         self.FlagVariable: AFlag = AFlag.Second | AFlag.Third
 
     def anotherFunc(self: Self) -> None:

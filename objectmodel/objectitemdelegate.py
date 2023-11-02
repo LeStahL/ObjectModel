@@ -36,7 +36,7 @@ class ObjectItemDelegate(QStyledItemDelegate):
         if index.column() == 1:
             if node.isEnum:
                 comboBox = QComboBox(parent)
-                comboBox.addItems([str(enumKey) for enumKey in node.type])
+                comboBox.addItems([enumKey.name for enumKey in node.type])
                 return comboBox
             
             if node.isBool:
@@ -59,7 +59,7 @@ class ObjectItemDelegate(QStyledItemDelegate):
         
         if index.column() == 1:
             if node.isEnum:
-                editor.setCurrentText(str(node.value))
+                editor.setCurrentText(node.value.name)
             
             elif node.isBool:
                 editor.setCurrentText(str(node.value))
@@ -80,7 +80,7 @@ class ObjectItemDelegate(QStyledItemDelegate):
         
         if index.column() == 1:
             if node.isEnum:
-                model.setData(index, node.type(editor.currentText()), Qt.ItemDataRole.EditRole)
+                model.setData(index, getattr(node.type, editor.currentText()), Qt.ItemDataRole.EditRole)
                 return
 
             if node.isFloat:

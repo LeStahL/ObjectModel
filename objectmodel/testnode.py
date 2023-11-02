@@ -10,12 +10,17 @@ from typing import (
 from enum import (
     StrEnum,
     IntFlag,
+    IntEnum,
     auto,
 )
 
 class AnEnum(StrEnum):
     Option1 = 'foo'
     Option2 = 'bar'
+
+class AnIntEnum(IntEnum):
+    A = auto()
+    B = auto()
 
 class AFlag(IntFlag):
     Nothing = 0
@@ -45,6 +50,7 @@ class DataClass:
             OtherDataClass("bad"),
         ]
         self.EnumVariable: AnEnum = AnEnum.Option2
+        self.IntEnumVariable: AnIntEnum = AnIntEnum.B
         self.FlagVariable: AFlag = AFlag.Second | AFlag.Third
 
     def anotherFunc(self: Self) -> None:
@@ -70,6 +76,17 @@ class NodeTest(TestCase):
 
         arrayElementNode: Node = self.node.fromPath('Root.ArrayVariable.[2].AVariable')
         self.assertEqual(arrayElementNode.value, 'baz')
+
+    def testIntEnumVariable(self: Self) -> None:
+        enumNode: Node = self.node.fromPath('Root.IntEnumVariable')
+        self.assertTrue(enumNode.isEnum)
+        self.assertFalse(enumNode.isFlag)
+        self.assertFalse(enumNode.isObject)
+        self.assertFalse(enumNode.isArray)
+        self.assertFalse(enumNode.isFloat)
+        self.assertFalse(enumNode.isInt)
+        self.assertFalse(enumNode.isString)
+        self.assertFalse(enumNode.isBool)
 
     def testEnumVariable(self: Self) -> None:
         enumNode: Node = self.node.fromPath('Root.EnumVariable')

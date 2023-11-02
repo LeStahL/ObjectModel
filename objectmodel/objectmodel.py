@@ -94,6 +94,8 @@ class ObjectModel(QAbstractItemModel):
                     return None
                 if node.isObject:
                     return None
+                if node.isEnum:
+                    return node.value.name
 
                 return str(node.value)
 
