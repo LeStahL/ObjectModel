@@ -9,6 +9,7 @@ from enum import (
     Flag,
 )
 from inspect import isclass
+from functools import reduce
 
 class Node:
     def __init__(
@@ -87,6 +88,14 @@ class Node:
     @property
     def index(self: Self) -> int:
         return self._index
+    
+    @property
+    def maxDepth(self: Self) -> int:
+        return reduce(
+            lambda accumulator, addition: max(accumulator, addition),
+            map(lambda child: child.maxDepth, self.children),
+            self.depth,
+        )
 
     @property
     def isEnum(self: Self) -> bool:

@@ -12,9 +12,11 @@ from PyQt6.QtCore import (
 )
 from PyQt6.QtGui import (
     QUndoStack,
+    QColor,
 )
 from objectmodel.node import Node
 from objectmodel.undovaluechange import UndoValueChange
+from objectmodel.colormap import ColorMap
 
 class ObjectModel(QAbstractItemModel):
     HeaderNames = [
@@ -42,6 +44,7 @@ class ObjectModel(QAbstractItemModel):
         self._undoStack.clear()
         self._undoStack.setClean()
         self._rootNode = Node(value=object, name=name)
+        self._colorMap = ColorMap(self._rootNode.maxDepth)
         self.endResetModel()
 
     def index(
@@ -104,6 +107,16 @@ class ObjectModel(QAbstractItemModel):
 
             elif index.column() == 2:
                 return node.type.__name__
+            
+        elif role == Qt.ItemDataRole.BackgroundRole:
+            useDarkPalette: bool = index.row() % 2 == 0
+            color: QColor = self._colorMap.colors[node.depth]
+            return color if useDarkPalette else color.lighter(115)
+        
+        elif role == Qt.ItemDataRole.ForegroundRole:
+            useDarkPalette: bool = index.row() % 2 == 0
+            color: QColor = self._colorMap.colors[node.depth]
+            return QColor(Qt.GlobalColor.black if 0.299 * color.redF() + 0.587 * color.greenF() + 0.114 * color.blueF() > 186.0 / 255. else Qt.GlobalColor.white)
 
         return None
 
