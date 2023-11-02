@@ -17,6 +17,7 @@ from PyQt6.QtGui import (
 from objectmodel.node import Node
 from objectmodel.undovaluechange import UndoValueChange
 from objectmodel.colormap import ColorMap
+from copy import deepcopy
 
 class ObjectModel(QAbstractItemModel):
     HeaderNames = [
@@ -162,3 +163,38 @@ class ObjectModel(QAbstractItemModel):
             return ObjectModel.HeaderNames[section]
         
         return None
+
+    def addArrayElementAt(
+        self: Self,
+        index: QModelIndex,
+        value: Optional[Any] = None,
+    ) -> None:
+        if not index.isValid():
+            return
+
+        parentNode: Node = self.parentNode(index)
+        if parentNode is None:
+            return
+
+        self.beginInsertRows(index.parent(), index.row(), index.row())
+        index.parent().internalPointer().insertArrayElement(index.row(), index.internalPointer().type() if value is None else value)
+        self.endInsertRows()
+
+        self.rowsInserted.emit(index.parent(), index.row(), index.row())
+
+    def removeArrayElementAt(
+        self: Self,
+        index: QModelIndex,
+    ) -> None:
+        if not index.isValid():
+            return
+
+        parentNode: Node = self.parentNode(index)
+        if parentNode is None:
+            return
+
+        self.beginRemoveRows(index.parent(), index.row(), index.row())
+        index.parent().internalPointer().removeArrayElement(index.row())
+        self.endRemoveRows()
+
+        self.rowsRemoved.emit(self.parent(index), index.row(), index.row())

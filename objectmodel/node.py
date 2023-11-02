@@ -28,15 +28,18 @@ class Node:
         self._path: str = self._name if parent is None else '.'.join((parent.path, self._name)) 
         self._type = type(value)
 
+        self.updateChildren()
+
+    def updateChildren(self) -> None:
         if self.isObject:
             self._children = list(map(
                 lambda key: Node(
-                    value=getattr(value, key),
+                    value=getattr(self._value, key),
                     name=key,
                     parent=self,
-                    index=list(value.__dict__.keys()).index(key),
+                    index=list(self._value.__dict__.keys()).index(key),
                 ),
-                value.__dict__.keys(),
+                self._value.__dict__.keys(),
             ))
         elif self.isArray:
             self._children = list(map(
@@ -162,3 +165,13 @@ class Node:
             return None
 
         return self.childWithName(pathComponents[1]).fromPath('.'.join(pathComponents[1:]))
+
+    def insertArrayElement(self: Self, at: int, value: Any) -> None:
+        if self.isArray:
+            self._value.insert(at, value)
+            self.updateChildren()
+
+    def removeArrayElement(self: Self, at: int) -> None:
+        if self.isArray:
+            del self._value[at]
+            self.updateChildren()

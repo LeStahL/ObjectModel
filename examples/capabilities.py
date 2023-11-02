@@ -1,5 +1,7 @@
 from objectmodel.objectmodel import ObjectModel
 from objectmodel.objectitemdelegate import ObjectItemDelegate
+from objectmodel.undoarrayinsert import UndoArrayInsert
+from objectmodel.undoarrayremove import UndoArrayRemove
 from typing import (
     Self,
     List,
@@ -17,9 +19,14 @@ from sys import (
 from PyQt6.QtWidgets import (
     QApplication,
     QTreeView,
+    QMenu,
 )
 from PyQt6.QtGui import QAction
-from PyQt6.QtCore import QFileInfo
+from PyQt6.QtCore import (
+    QFileInfo,
+    Qt,
+    QPoint,
+)
 
 class AnEnum(StrEnum):
     Option1 = 'foo'
@@ -38,7 +45,7 @@ class AFlag(IntFlag):
 class OtherDataClass:
     def __init__(
         self: Self,
-        variable: str,
+        variable: str = '',
     ) -> None:
         self.AVariable = variable
         self.file = QFileInfo()
@@ -84,6 +91,35 @@ if __name__ == '__main__':
     redoAction.setShortcut("CTRL+SHIFT+z")
     redoAction.triggered.connect(objectModel.undoStack.redo)
     treeView.addActions((undoAction, redoAction))
+
+    contextMenu = QMenu(treeView)
+    insertArrayElementAction = QAction("Insert Element", treeView)
+    removeArrayElementAction = QAction("Remove Element", treeView)
+    contextMenu.addActions([insertArrayElementAction, removeArrayElementAction])
+
+    def contextMenuRequested(pos: QPoint) -> None:
+        index = treeView.indexAt(pos)
+        if not index.isValid():
+            return
+
+        if index.internalPointer().parent is None:
+            return
+
+        if index.internalPointer().parent.isArray:
+            def insertArrayTriggered() -> None:
+                objectModel.undoStack.push(UndoArrayInsert(index))
+                insertArrayElementAction.triggered.disconnect(insertArrayTriggered)
+            insertArrayElementAction.triggered.connect(insertArrayTriggered)
+
+            def removeArrayTriggered() -> None:
+                objectModel.undoStack.push(UndoArrayRemove(index))
+                removeArrayElementAction.triggered.disconnect(removeArrayTriggered)
+            removeArrayElementAction.triggered.connect(removeArrayTriggered)
+
+            contextMenu.popup(treeView.viewport().mapToGlobal(pos))
+
+    treeView.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+    treeView.customContextMenuRequested.connect(contextMenuRequested)
 
     treeView.show()
     exit(app.exec())
