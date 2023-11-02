@@ -20,7 +20,7 @@ class UndoValueChange(QUndoCommand):
         super().__init__()
 
         self._path = index.internalPointer().path
-        self._oldValue = deepcopy(index.internalPointer().value)
+        self._oldValue = index.internalPointer().value
         self._newValue = newValue
         self._model = index.model()
 

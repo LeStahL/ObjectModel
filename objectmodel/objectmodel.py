@@ -2,6 +2,7 @@ from typing import (
     Optional,
     Self,
     Any,
+    List,
 )
 from PyQt6.QtCore import (
     QModelIndex,
