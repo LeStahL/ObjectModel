@@ -13,6 +13,7 @@ from enum import (
     IntEnum,
     auto,
 )
+from PyQt6.QtCore import QFileInfo
 
 class AnEnum(StrEnum):
     Option1 = 'foo'
@@ -52,6 +53,7 @@ class DataClass:
         self.EnumVariable: AnEnum = AnEnum.Option2
         self.IntEnumVariable: AnIntEnum = AnIntEnum.B
         self.FlagVariable: AFlag = AFlag.Second | AFlag.Third
+        self.FileVariable: QFileInfo = QFileInfo()
 
     def anotherFunc(self: Self) -> None:
         pass
@@ -87,6 +89,7 @@ class NodeTest(TestCase):
         self.assertFalse(enumNode.isInt)
         self.assertFalse(enumNode.isString)
         self.assertFalse(enumNode.isBool)
+        self.assertFalse(enumNode.isFilePath)
 
     def testEnumVariable(self: Self) -> None:
         enumNode: Node = self.node.fromPath('Root.EnumVariable')
@@ -98,6 +101,7 @@ class NodeTest(TestCase):
         self.assertFalse(enumNode.isInt)
         self.assertFalse(enumNode.isString)
         self.assertFalse(enumNode.isBool)
+        self.assertFalse(enumNode.isFilePath)
 
     def testFlagVariable(self: Self) -> None:
         flagNode: Node = self.node.fromPath('Root.FlagVariable')
@@ -109,6 +113,7 @@ class NodeTest(TestCase):
         self.assertFalse(flagNode.isInt)
         self.assertFalse(flagNode.isString)
         self.assertFalse(flagNode.isBool)
+        self.assertFalse(flagNode.isFilePath)
 
     def testArrayVariable(self: Self) -> None:
         arrayNode: Node = self.node.fromPath('Root.ArrayVariable')
@@ -120,6 +125,7 @@ class NodeTest(TestCase):
         self.assertFalse(arrayNode.isInt)
         self.assertFalse(arrayNode.isString)
         self.assertFalse(arrayNode.isBool)
+        self.assertFalse(arrayNode.isFilePath)
 
     def testObjectVariable(self: Self) -> None:
         objectNode: Node = self.node
@@ -131,6 +137,7 @@ class NodeTest(TestCase):
         self.assertFalse(objectNode.isInt)
         self.assertFalse(objectNode.isString)
         self.assertFalse(objectNode.isBool)
+        self.assertFalse(objectNode.isFilePath)
 
     def testFloatVariable(self: Self) -> None:
         node: Node = self.node.fromPath('Root.FloatVariable')
@@ -142,6 +149,7 @@ class NodeTest(TestCase):
         self.assertFalse(node.isInt)
         self.assertFalse(node.isString)
         self.assertFalse(node.isBool)
+        self.assertFalse(node.isFilePath)
 
     def testIntVariable(self: Self) -> None:
         node: Node = self.node.fromPath('Root.InstanceVariable')
@@ -153,6 +161,7 @@ class NodeTest(TestCase):
         self.assertTrue(node.isInt)
         self.assertFalse(node.isString)
         self.assertFalse(node.isBool)
+        self.assertFalse(node.isFilePath)
 
     def testStringVariable(self: Self) -> None:
         node: Node = self.node.fromPath('Root.StringVariable')
@@ -164,6 +173,7 @@ class NodeTest(TestCase):
         self.assertFalse(node.isInt)
         self.assertTrue(node.isString)
         self.assertFalse(node.isBool)
+        self.assertFalse(node.isFilePath)
 
     def testBoolVariable(self: Self) -> None:
         node: Node = self.node.fromPath('Root.BoolVariable')
@@ -175,6 +185,19 @@ class NodeTest(TestCase):
         self.assertFalse(node.isInt)
         self.assertFalse(node.isString)
         self.assertTrue(node.isBool)
+        self.assertFalse(node.isFilePath)
+
+    def testFilePathVariable(self: Self) -> None:
+        node: Node = self.node.fromPath('Root.FileVariable')
+        self.assertFalse(node.isObject)
+        self.assertFalse(node.isEnum)
+        self.assertFalse(node.isFlag)
+        self.assertFalse(node.isArray)
+        self.assertFalse(node.isFloat)
+        self.assertFalse(node.isInt)
+        self.assertFalse(node.isString)
+        self.assertFalse(node.isBool)
+        self.assertTrue(node.isFilePath)
 
 if __name__ == '__main__':
     main()

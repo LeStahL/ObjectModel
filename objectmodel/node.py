@@ -10,6 +10,7 @@ from enum import (
 )
 from inspect import isclass
 from functools import reduce
+from PyQt6.QtCore import QFileInfo
 
 class Node:
     def __init__(
@@ -122,7 +123,8 @@ class Node:
             self.isFloat or \
             self.isInt or \
             self.isString or \
-            self.isBool
+            self.isBool or \
+            self.isFilePath
         )
 
     @property
@@ -136,6 +138,10 @@ class Node:
     @property
     def isFloat(self: Self) -> bool:
         return self._type == float
+    
+    @property
+    def isFilePath(self: Self) -> bool:
+        return isinstance(self._value, QFileInfo)
 
     def childWithName(self: Self, name: str) -> Optional[Self]:
         for child in self._children:

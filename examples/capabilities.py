@@ -19,6 +19,7 @@ from PyQt6.QtWidgets import (
     QTreeView,
 )
 from PyQt6.QtGui import QAction
+from PyQt6.QtCore import QFileInfo
 
 class AnEnum(StrEnum):
     Option1 = 'foo'
@@ -40,6 +41,7 @@ class OtherDataClass:
         variable: str,
     ) -> None:
         self.AVariable = variable
+        self.file = QFileInfo()
 
 class DataClass:
     ClassVariable: int = 0

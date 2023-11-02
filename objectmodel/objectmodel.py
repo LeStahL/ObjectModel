@@ -102,6 +102,8 @@ class ObjectModel(QAbstractItemModel):
                     return None
                 if node.isEnum:
                     return node.value.name
+                if node.isFilePath:
+                    return '/'.join(map(lambda component: component[0] if len(component) > 0 else '', node.value.path().split('/'))) + '/' + node.value.fileName()
 
                 return str(node.value)
 

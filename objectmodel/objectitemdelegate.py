@@ -1,15 +1,16 @@
-from PyQt6 import QtCore
 from PyQt6.QtWidgets import (
     QStyledItemDelegate,
     QStyleOptionViewItem,
     QWidget,
     QComboBox,
+    QFileDialog,
 )
 from PyQt6.QtCore import (
     QObject,
     QModelIndex,
     QAbstractItemModel,
     Qt,
+    QFileInfo,
 )
 from typing import (
     Optional,
@@ -39,10 +40,17 @@ class ObjectItemDelegate(QStyledItemDelegate):
                 comboBox.addItems([enumKey.name for enumKey in node.type])
                 return comboBox
             
-            if node.isBool:
+            elif node.isBool:
                 comboBox = QComboBox(parent)
                 comboBox.addItems(['True', 'False'])
                 return comboBox
+            
+            elif node.isFilePath:
+                dialog = QFileDialog()
+                dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+                dialog.setDirectory(node._value.path())
+                dialog.setWindowTitle('Change {}'.format(node.name))
+                return dialog
 
         return super().createEditor(parent, option, index)
 
@@ -100,6 +108,17 @@ class ObjectItemDelegate(QStyledItemDelegate):
             if node.isBool:
                 try:
                     model.setData(index, editor.currentText() == 'True', Qt.ItemDataRole.EditRole)
+                except:
+                    pass
+                return
+            
+            if node.isFilePath:
+                try:
+                    if editor.result() == QFileDialog.DialogCode.Rejected:
+                        return
+
+                    selectedFiles = editor.selectedFiles()
+                    model.setData(index, QFileInfo(selectedFiles[0]), Qt.ItemDataRole.EditRole)
                 except:
                     pass
                 return
