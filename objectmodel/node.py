@@ -77,6 +77,9 @@ class Node:
     def value(self: Self, value: Any) -> None:
         self._value = value
 
+        if self._parent is not None:
+            setattr(self._parent.value, self._name, value)
+
     @property
     def type(self: Self) -> Any:
         return self._type
